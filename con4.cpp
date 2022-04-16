@@ -3,14 +3,23 @@
 #include <thread>
 #include <unistd.h>
 using namespace std;
-mutex p, a, o, at; //实例化m对象，不要理解为定义变量
-int k_plate = 100;
-int apple = 0;
-int orange = 0;
-int i = 100;
-void dad() {
+ //实例化m对象，不要理解为定义变量
+class plate{
+private:
+    int apple;
+    int k_plate;
+    int orange;
+
+public:
+    mutex m;
+    plate(int k_plate,int apple,int orange)
+        :k_plate(k_plate),apple(apple)
+        ,orange(orange){}
+
+}
+void dad(&plate) {
   while (1) {
-    p.lock();
+    at.lock();
     if (k_plate > 0) {
       --k_plate;
       p.unlock();
@@ -63,12 +72,18 @@ void nv() {
 
 void monitor() {
   while (1) {
-    cout << "k_plate:" << k_plate << "\tapple" << apple << "\torange" << orange
-         << endl;
+    cout << "k_plate:" << k_plate
+        << "\tapple" << apple << "\torange"
+        << orange
+        << endl;
     // usleep(900000);
   }
 }
 int main() {
+
+    plate myple(5,0,0);
+
+
   thread d(dad);
   thread s(son);
   thread m(monitor);
