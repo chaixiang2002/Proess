@@ -4,18 +4,15 @@
 #include <utility>
 #include <vector>
 #include <string>
-#include <windows.h>
-
+//#include <windows.h>
 struct Plate{
     std::string name;
-
     enum State{
         None,
         Apple,
         Orange
     }state=None;
 };
-
 class PlateHelper{
     Plate* plate;
     std::mutex* mutex;
@@ -29,7 +26,6 @@ public:
             mutex->unlock();
             plate=nullptr;
         }
-
     }
     bool apply_apple(){
         if(Plate::None==plate->state){
@@ -61,6 +57,9 @@ public:
     }
     std::string& get_name(){
         return plate->name;
+    }
+    auto& get_state(){
+        return plate->state;
     }
 };
 
@@ -170,16 +169,24 @@ int main(){
 
 auto monitor_=[&](){
         while (true) {
-            std::cout<<"=============================================="<<std::endl;;
-            std::vector<int> count;
+            int k_plate=0,apple=0,orange=0;
             for(auto& plate:plates){
-                ++count[plate->lock_()];
+                auto sum=plate->try_lock();
+                if(sum.first==true){
+                    auto plate=sum.second;
+                    if(plate.get_state()==Plate::None)
+                        k_plate++;
+                    else if (plate.get_state()==Plate::Apple)
+                        apple++;
+                    else
+                        orange++;
+                }
             }
-            std::cout<<"\t \t \t \t k_plates: " <<count[0]<<"apple: "<<count[1]<<"orange: "<<count[2]<<"\n";
-            for(auto& plate:plates){
-                plate->unlock_();
-            }
-            Sleep(1000);
+            std::string ch =
+                "\t \t \t \t \t \t k_plates: " + std::to_string(k_plate) +
+                "\tapple: " + std::to_string(apple) + R"(	orange: )" +
+                std::to_string(orange) + "\n";
+            std::cout<<ch;
         }
     };
     std::thread father_thread(father);
@@ -187,9 +194,7 @@ auto monitor_=[&](){
     std::thread mother_thread(mother);
     std::thread girl_thread(girl);
     std::thread monitor_threag(monitor_);
-
     while (true) {}
-
     return 0;
 }
 
