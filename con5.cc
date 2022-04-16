@@ -26,6 +26,7 @@ public:
             mutex->unlock();
             plate=nullptr;
         }
+
     }
     bool apply_apple(){
         if(Plate::None==plate->state){
@@ -184,7 +185,7 @@ auto monitor_=[&](){
             }
             std::string ch =
                 "\t \t \t \t \t \t k_plates: " + std::to_string(k_plate) +
-                "\tapple: " + std::to_string(apple) + R"(	orange: )" +
+                "\tapple: " + std::to_string(apple) + R"(orange: )" +
                 std::to_string(orange) + "\n";
             std::cout<<ch;
         }
