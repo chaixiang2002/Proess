@@ -185,7 +185,7 @@ auto monitor_=[&](){
             }
             std::string ch =
                 "\t \t \t \t \t \t k_plates: " + std::to_string(k_plate) +
-                "\tapple: " + std::to_string(apple) + R"(orange: )" +
+                "\tapple: " + std::to_string(apple) + "\torange: " +
                 std::to_string(orange) + "\n";
             std::cout<<ch;
         }
